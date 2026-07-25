@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Environment-specific configuration
+.env
+.env.*
+!.env.example
+
+# Editor and operating system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Generated assets
+assets/css/output.css
