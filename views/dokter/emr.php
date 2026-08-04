@@ -12,7 +12,7 @@ if (!$id_antrian) {
 
 // Fetch Antrian & Pasien Data
 $stmt = $pdo->prepare("
-    SELECT a.*, p.nama_pasien, p.jenis_kelamin, p.umur_pasien, p.berat_badan, p.tinggi_badan, p.alamat_pasien 
+    SELECT a.*, p.nama_pasien, p.jenis_kelamin, TIMESTAMPDIFF(YEAR, p.tempat_tanggal_lahir, CURDATE()) as umur, p.berat_badan, p.tinggi_badan, p.alamat_pasien 
     FROM Antrian a
     JOIN Pasien p ON a.id_pasien = p.id_pasien
     WHERE a.id_antrian = ? AND a.id_dokter = ?
@@ -227,7 +227,7 @@ $obatList = $stmtObat->fetchAll(PDO::FETCH_ASSOC);
                     <?= strtoupper(substr($pasien['nama_pasien'], 0, 1)) ?>
                 </div>
                 <h3 class="text-xl font-bold mb-1"><?= htmlspecialchars($pasien['nama_pasien']) ?></h3>
-                <p class="text-slate-400 text-sm"><?= $pasien['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' ?> &bull; <?= $pasien['umur_pasien'] ?? '-' ?> Tahun</p>
+                <p class="text-slate-400 text-sm"><?= $pasien['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' ?> &bull; <?= $pasien['umur'] ?? '-' ?> Tahun</p>
             </div>
             <div class="p-6 space-y-4">
                 <div>

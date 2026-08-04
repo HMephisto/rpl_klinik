@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 // Fetch Pending Prescriptions (Menunggu Racikan)
 $today = date('Y-m-d');
 $stmtResep = $pdo->prepare("
-    SELECT r.id_resep, r.tgl_resep, rm.nomor_RM, p.nama_pasien, p.jenis_kelamin, p.umur_pasien, d.nama_lengkap as nama_dokter
+    SELECT r.id_resep, r.tgl_resep, rm.nomor_RM, p.nama_pasien, p.jenis_kelamin, TIMESTAMPDIFF(YEAR, p.tempat_tanggal_lahir, CURDATE()) as umur, d.nama_lengkap as nama_dokter
     FROM Resep r
     JOIN Rekam_Medis rm ON r.nomor_RM = rm.nomor_RM
     JOIN Pasien p ON rm.id_pasien = p.id_pasien
@@ -92,7 +92,7 @@ if (!empty($reseps)) {
                             </div>
                             <div class="text-sm text-slate-600 flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                <?= $r['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' ?>, <?= htmlspecialchars($r['umur_pasien'] ?? '-') ?> Tahun
+                                <?= $r['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' ?>, <?= htmlspecialchars($r['umur'] ?? '-') ?> Tahun
                                 <span class="text-slate-300">|</span>
                                 <span class="font-medium">Dokter: <?= htmlspecialchars($r['nama_dokter']) ?></span>
                             </div>

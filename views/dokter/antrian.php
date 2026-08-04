@@ -6,7 +6,7 @@ $today = date('Y-m-d');
 
 // Fetch antrian khusus untuk dokter yang login
 $stmtQueue = $pdo->prepare("
-    SELECT a.id_antrian, a.nomor_antrian, a.status, p.id_pasien, p.nama_pasien, p.jenis_kelamin, p.umur_pasien 
+    SELECT a.id_antrian, a.nomor_antrian, a.status, p.id_pasien, p.nama_pasien, p.jenis_kelamin, TIMESTAMPDIFF(YEAR, p.tempat_tanggal_lahir, CURDATE()) as umur 
     FROM Antrian a
     JOIN Pasien p ON a.id_pasien = p.id_pasien
     WHERE a.tgl_antrian = ? AND a.id_dokter = ? AND a.status = 'Menunggu'
@@ -42,7 +42,7 @@ $queueList = $stmtQueue->fetchAll(PDO::FETCH_ASSOC);
                             </span>
                             <span class="flex items-center gap-1">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                <?= htmlspecialchars($q['umur_pasien'] ?? '-') ?> Tahun
+                                <?= htmlspecialchars($q['umur'] ?? '-') ?> Tahun
                             </span>
                         </div>
                         

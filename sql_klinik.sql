@@ -34,13 +34,14 @@ CREATE TABLE Pengguna (
 
 -- ============================================================
 -- 2. Tabel Pasien
+--    Field yang dihapus:
+--    - umur_pasien (tidak pernah di-insert di form pendaftaran, selalu NULL)
 -- ============================================================
 CREATE TABLE Pasien (
     id_pasien INT PRIMARY KEY AUTO_INCREMENT,
     nama_pasien VARCHAR(100),
     tempat_tanggal_lahir VARCHAR(100),
     alamat_pasien TEXT,
-    umur_pasien INT,
     jenis_kelamin ENUM('L', 'P'),
     berat_badan DECIMAL(5,2),
     tinggi_badan DECIMAL(5,2)
@@ -101,13 +102,15 @@ CREATE TABLE Detail_Resep (
 
 -- ============================================================
 -- 7. Tabel Struk
+--    Field pemeriksaan_penunjang digunakan untuk menyimpan
+--    rincian pembayaran dalam format JSON
 -- ============================================================
 CREATE TABLE Struk (
     id_struk INT PRIMARY KEY AUTO_INCREMENT,
     id_pasien INT,
     id_staff INT, -- Mengambil dari tabel Pengguna (Resepsionis/Kasir)
     total_harga DECIMAL(15,2),
-    pemeriksaan_penunjang TEXT,
+    pemeriksaan_penunjang TEXT, -- Menyimpan rincian pembayaran (JSON)
     tgl_bayar DATETIME,
     FOREIGN KEY (id_pasien) REFERENCES Pasien(id_pasien),
     FOREIGN KEY (id_staff) REFERENCES Pengguna(id_user)

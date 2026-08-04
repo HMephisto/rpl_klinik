@@ -10,7 +10,7 @@ if (!$id_struk) {
 }
 
 // Fetch receipt details
-$query = "SELECT s.*, p.nama_pasien, p.alamat_pasien, p.umur_pasien, p.jenis_kelamin, u.nama_lengkap as nama_staff 
+$query = "SELECT s.*, p.nama_pasien, p.alamat_pasien, TIMESTAMPDIFF(YEAR, p.tempat_tanggal_lahir, CURDATE()) as umur, p.jenis_kelamin, u.nama_lengkap as nama_staff 
           FROM Struk s 
           JOIN Pasien p ON s.id_pasien = p.id_pasien 
           JOIN Pengguna u ON s.id_staff = u.id_user 
@@ -59,7 +59,7 @@ if (!$receipt) {
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Informasi Pasien</h3>
                 <div class="space-y-1">
                     <p class="font-bold text-slate-800"><?= htmlspecialchars($receipt['nama_pasien']) ?></p>
-                    <p class="text-sm text-slate-600">Umur: <?= htmlspecialchars($receipt['umur_pasien']) ?> Tahun (<?= $receipt['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' ?>)</p>
+                    <p class="text-sm text-slate-600">Umur: <?= htmlspecialchars($receipt['umur'] ?? '-') ?> Tahun (<?= $receipt['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' ?>)</p>
                     <p class="text-sm text-slate-600"><?= htmlspecialchars($receipt['alamat_pasien']) ?></p>
                 </div>
             </div>

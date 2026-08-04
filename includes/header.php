@@ -13,7 +13,32 @@ $nama = $_SESSION['nama_lengkap'] ?? 'User';
 $inisial = strtoupper(substr($nama, 0, 1));
 
 // Determine active tab (simple routing simulation)
-$activeTab = $_GET['tab'] ?? 'dashboard';
+$rawTab = $_GET['tab'] ?? 'dashboard';
+
+// Normalize default tab by role so first-login lands on the correct page
+$defaultTabsByRole = [
+    'Resepsionis' => 'pendaftaran',
+    'Dokter'      => 'antrian',
+    'Apoteker'    => 'antrian_resep',
+];
+if ($rawTab === 'dashboard' && isset($defaultTabsByRole[$role])) {
+    $activeTab = $defaultTabsByRole[$role];
+} else {
+    $activeTab = $rawTab;
+}
+
+// Map tab IDs to proper display titles
+$tabTitles = [
+    'dashboard' => 'Dashboard',
+    'pendaftaran' => 'Pendaftaran & Antrian',
+    'kasir' => 'Kasir & Pembayaran',
+    'riwayat_pembayaran' => 'Riwayat Pembayaran',
+    'antrian' => 'Antrian Pasien',
+    'emr' => 'Rekam Medis',
+    'antrian_resep' => 'Antrian Resep',
+    'obat' => 'Manajemen Obat',
+];
+$activeTitle = $tabTitles[$activeTab] ?? ucfirst(str_replace('-', ' ', $activeTab));
 
 // Menu Items based on role
 $menuItems = [];
@@ -55,7 +80,7 @@ if ($role === 'Resepsionis') {
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg leading-tight">Klinik Sehat</h1>
+                    <h1 class="font-bold text-lg leading-tight">Klinik</h1>
                     <p class="text-xs text-slate-400">Management System</p>
                 </div>
             </div>
@@ -85,7 +110,7 @@ if ($role === 'Resepsionis') {
             <header class="bg-white h-20 border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10 shadow-sm">
                 <div class="flex items-center gap-4">
                     <h2 class="text-xl font-bold text-slate-800 capitalize">
-                        <?= htmlspecialchars(str_replace('-', ' ', $activeTab)) ?>
+                        <?= htmlspecialchars($activeTitle) ?>
                     </h2>
                 </div>
                 
